@@ -29,8 +29,8 @@ jobs:
       
       - name: Creation of .env file
         run: |
-          echo TEST=${{ vars.TEST }} >> .env
-          
+          echo TEST=TEST >> .env
+
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
