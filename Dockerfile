@@ -1,6 +1,9 @@
 # Stage 1: Dependencies and build
 FROM node:20-alpine AS builder
 
+# Set platform for multi-architecture build
+ARG TARGETPLATFORM=linux/arm64
+
 # Set working directory
 WORKDIR /app
 
@@ -8,7 +11,9 @@ WORKDIR /app
 COPY package.json yarn.lock* ./
 
 # Install dependencies using yarn
-RUN yarn install --frozen-lockfile
+# Add build tools needed for native dependencies on ARM
+RUN apk add --no-cache python3 make g++ && \
+    yarn install --frozen-lockfile --network-timeout 100000
 
 # Copy source code
 COPY . .
@@ -18,6 +23,9 @@ RUN yarn build
 
 # Stage 2: Production environment
 FROM node:20-alpine AS runner
+
+# Set platform for multi-architecture build
+ARG TARGETPLATFORM=linux/arm64
 
 # Set working directory
 WORKDIR /app
