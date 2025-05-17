@@ -1,8 +1,5 @@
 # Stage 1: Dependencies and build
-FROM node:20-alpine AS builder
-
-# Set platform for multi-architecture build
-ARG TARGETPLATFORM=linux/arm64
+FROM --platform=linux/arm64 node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -22,10 +19,7 @@ COPY . .
 RUN yarn build
 
 # Stage 2: Production environment
-FROM node:20-alpine AS runner
-
-# Set platform for multi-architecture build
-ARG TARGETPLATFORM=linux/arm64
+FROM --platform=linux/arm64 node:20-alpine AS runner
 
 # Set working directory
 WORKDIR /app
